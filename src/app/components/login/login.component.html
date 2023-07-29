@@ -1,1 +1,29 @@
-<p>login works!</p>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,800&display=swap"
+        rel="stylesheet">
+</head>
+<div class="container">
+    <div class="img__login">
+    </div>
+    <h1 class="title">Login</h1>
+    <form class="form" (ngSubmit)="save($event)">
+        <div class="form__container">
+            <div class="input__box">
+                <input id="email" placeholder="Ingrese su email" type="email" class="email__input">
+            </div>
+            <div class="input__box">
+                <input id="password" placeholder="password" type="password" class="pass__input">
+            </div>
+            <button  [ngClass]="{'loading': isLoading, 'load-finished': loadFinished}" (click)="simulateAsyncTask()" [disabled]="isLoading"
+                type="button" class="btn btn-submit">
+                <span *ngIf="isLoading && check">Verificando...</span>
+                <span *ngIf="!isLoading && check">Sign In</span>   
+                <div *ngIf="loadFinished" class="imgLoading">
+                </div>
+            </button>
+        </div>
+    </form>
+    <a class="btn__account">Crear una cuenta</a>
+</div>

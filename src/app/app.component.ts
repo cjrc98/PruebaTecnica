@@ -13,6 +13,6 @@ export class AppComponent {
     this.routeInitial();
   }
   routeInitial(){
-    this.router.navigate(['login'])
+    this.router.navigate(['dashboard'])
   }
 }

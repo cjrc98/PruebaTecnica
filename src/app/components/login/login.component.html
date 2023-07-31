@@ -1,62 +1,68 @@
 <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,800&display=swap"
-        rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,800&display=swap"
+    rel="stylesheet">
 </head>
+
+<div class="global">
+
+<div class="otuside">
+  <img class="img__login--rigth" src="../../../assets/covid2.jpeg">
+</div>
 <div class="container">
-    <div class="img__login">
-    </div>
+  <div class="up">
+    <div class="img__login"></div>
+  </div>
+
+  <div class="down">
     <h1 class="title">Login</h1>
     <form class="form" [formGroup]="ValidationFormUSer" (ngSubmit)="save($event)">
-        <div class="form__container">
-            <div class="input__box">
+      <div class="form__container">
+        <div class="input__box">
 
-                <input id="email" placeholder="Ingrese su email" type="email" class="email__input"
-                    formControlName="email" required>
+          <input id="email" placeholder="Ingrese su email" type="email" class="email__input" formControlName="email"
+            required>
 
-                    <ng-container *ngFor="let validation of validationMessages.email">
-                        <div
-                          class="error_message"
-                          *ngIf="
+          <ng-container *ngFor="let validation of validationMessages.email">
+            <div class="error_message" *ngIf="
                             ValidationFormUSer.get('email')!.hasError(validation.type) &&
                             (ValidationFormUSer.get('email')!.touched)
-                          "
-                        >
-                          {{ validation.message }}
-                        </div>
-                      </ng-container>
-
+                          ">
+              {{ validation.message }}
             </div>
+          </ng-container>
 
-            <div class="input__box">
-            
-                <input id="password" placeholder="password" type="password" class="pass__input"
-                    formControlName="password" required>
-            </div>
+        </div>
 
-            <ng-container *ngFor="let validation of validationMessages.password">
-                <div
-                  class="error_message"
-                  *ngIf="
+        <div class="input__box">
+
+          <input id="password" placeholder="password" type="password" class="pass__input" formControlName="password"
+            required>
+        </div>
+
+        <ng-container *ngFor="let validation of validationMessages.password">
+          <div class="error_message" *ngIf="
                     ValidationFormUSer.get('password')!.hasError(validation.type) &&
                     (ValidationFormUSer.get('password')!.dirty ||
                       ValidationFormUSer.get('password')!.touched)
-                  "
-                >
-                  {{ validation.message }}
-                </div>
-            </ng-container>
-            <button (click)="simulateAsyncTask()" [ngClass]="{'loading': isLoading, 'load-finished': loadFinished}"
-                (click)="simulateAsyncTask()" [disabled]="isLoading" type="button" class="btn btn-submit"
-                [disabled]="!ValidationFormUSer.valid">
-                <span *ngIf="isLoading && check">Verificando...</span>
-                <span *ngIf="!isLoading && check">Sign In</span>
-                <div *ngIf="loadFinished"  class="imgLoading"> </div>
-                <div *ngIf="loginFalse" class="loginFalse"></div>
-            </button>
-        </div>
+                  ">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+        <button (click)="simulateAsyncTask()" [ngClass]="{'loading': isLoading, 'load-finished': loadFinished}"
+          (click)="simulateAsyncTask()"  type="button" class="btn btn-submit"
+          [disabled]="!ValidationFormUSer.valid">
+          <span *ngIf="isLoading && check">Verificando...</span>
+          <span *ngIf="!isLoading && check">Sign In</span>
+          <div *ngIf="loadFinished" class="imgLoading"> </div>
+          <div *ngIf="loginFalse" class="loginFalse"></div>
+        </button>
+      </div>
     </form>
     <a class="btn__account" type="button">Crear una cuenta</a>
+  </div>
 </div>
 <app-alertshow [visible]="noLogin" [mensaje]="alertMsg" (salida)="exitAlert($event)"></app-alertshow>
+
+</div>

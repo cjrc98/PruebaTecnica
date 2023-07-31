@@ -1,11 +1,14 @@
 {
   "perfil": [
     {
-      "nombre": "camilo",
+      "name": "camilo",
       "email": "camilored30@gmail.com",
-      "contrasena": "23456aZ",
-      "id": "4d0ea522-5b3f-4f0f-97da-a00d7676b079"
+      "password": "123123"
+    },
+    {
+      "name": "diana",
+      "email": "diana@gmail.com",
+      "password": "123123"
     }
-  ],
-  "data": []
+  ]
 }

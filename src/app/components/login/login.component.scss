@@ -53,7 +53,7 @@ input {
     margin: 0 auto;
     font-size: 18px;
     font-weight: 800;
-
+    margin-top: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -120,8 +120,10 @@ button.load-finished span {
 }
 
 button.load-finished img {
-    display: block; /* Convertimos la imagen en un bloque para poder centrarla */
-    margin: 0 auto; /* Centramos la imagen horizontalmente */
+    display: block;
+    /* Convertimos la imagen en un bloque para poder centrarla */
+    margin: 0 auto;
+    /* Centramos la imagen horizontalmente */
 }
 
 .imgLoading {
@@ -129,5 +131,27 @@ button.load-finished img {
     background-size: 40px;
     background-position: 50%;
     background-repeat: no-repeat;
-    height: 60px; width: 100%;
+    height: 60px;
+    width: 100%;
 }
+
+.loginFalse {
+    background-image: url('../../../assets/nocheck.png');
+    background-size: 40px;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    height: 60px;
+    width: 100%;
+}
+
+.error_message {
+    font-size: 16px;
+    font-weight: bold;
+    color: red;
+    text-align: center;
+    margin: 0;
+}
+
+@media screen and (min-width: 768px) {}
+
+@media screen and (min-width: 992px) {}

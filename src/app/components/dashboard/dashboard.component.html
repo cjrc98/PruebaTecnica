@@ -10,7 +10,7 @@
 
 
 <select class="select__state" (change)="onOptionSelected($event)">
-    <option value=""></option>
+    <option value="seleccionar"></option>
     <option *ngFor="let option of state.states" [value]="option">{{ option }}</option>
 </select>
 

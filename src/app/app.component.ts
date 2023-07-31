@@ -13,6 +13,10 @@ export class AppComponent {
     this.routeInitial();
   }
   routeInitial(){
-    this.router.navigate(['dashboard'])
+    if(localStorage.getItem('userData')){
+      this.router.navigate(['login']);
+    }else{
+      this.router.navigate(['login']);
+    }
   }
 }

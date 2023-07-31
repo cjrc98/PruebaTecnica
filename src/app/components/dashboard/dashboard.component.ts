@@ -1,14 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent{
+  @ViewChild('myCanvas') myCanvas!: ElementRef;
+  @ViewChild('myCanvas2') myCanvas2!: ElementRef;
+  private context!: CanvasRenderingContext2D | null;
+  private context2!: CanvasRenderingContext2D | null;
+  
   csvFile: File;
   csvData: any[][] = [];
   hola: any;
+  state = {
+    poblation: [],
+    infected: [],
+    states: [],
+    percentage: []
+  };
+  selectedOption: string;
+  myChart;
+  myChart2;
+
+  constructor(){
+    Chart.register(...registerables);
+  }
+
 
   onFileSelected(event: any) {
     this.csvFile = event.target.files[0];
@@ -23,6 +43,7 @@ export class DashboardComponent {
         this.csvData = this.CSVToArray(csvData);
         this.csvData[0].splice(11, 0, "Province", "Country");
         this.calcData(this.matrizToJson(this.csvData));
+        console.log(this.csvData);     
         return this.csvData;
       };
 
@@ -62,13 +83,9 @@ export class DashboardComponent {
   }
 
   calcData(jsonData) {
-    const state = {
-      poblation: [],
-      infected: [],
-      states: []
-    };
-    this.insertDataStateObject(state, jsonData);
-    this.calcStatesAffected(state);
+
+    this.insertDataStateObject(this.state, jsonData);
+    this.calcStatesAffected(this.state);
 
   }
 
@@ -81,10 +98,10 @@ export class DashboardComponent {
       const infected = state.infected[index];
       const poblation = state.poblation[index];
 
-      const percentageInfected = (infected * 100) / poblation;
+      state.percentage[index] = (infected * 100) / poblation;
 
-      if (percentageInfected > valueStatesAffected) {
-        valueStatesAffected = percentageInfected;
+      if (state.percentage[index] > valueStatesAffected) {
+        valueStatesAffected = state.percentage[index];
         statesAffected = state.states[index];
       }
 
@@ -97,7 +114,9 @@ export class DashboardComponent {
     console.log('states mas Affected con un porcentaje de infeccion de: ', valueStatesAffected, ' es el states de:', statesAffected);
     console.log('Valor más alto de infected:', maxinfected);
     console.log('Valor más bajo de infected:', mininfected);
-    console.log(state);
+    // console.log(state);
+
+
   }
 
   insertDataStateObject(state, jsonData) {
@@ -149,9 +168,83 @@ export class DashboardComponent {
 
       }
     }
+
+   
   }
 
+  createChart(index) {
+   
+    this.context = this.myCanvas.nativeElement.getContext('2d');
+    const colors = this.generateRandomColors(this.state.poblation.length);
+    // this.destroyChart();
+    if (this.myChart) {
+      this.myChart.destroy();
+    }
+    this.myChart = new Chart(this.context, {
+      type: 'pie',
+      data: {
+        labels: ['Poblacion', 'Infectados'],
+        datasets: [  
+          { data: [ this.state.poblation[index], this.state.infected[index] ], label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
 
+ 
+
+  }
+
+  createChartBar(index) {
+   
+    this.context = this.myCanvas2.nativeElement.getContext('2d');
+    const colors = this.generateRandomColors(this.state.poblation.length);
+    // this.destroyChart();
+    if (this.myChart2) {
+      this.myChart2.destroy();
+    }
+    this.myChart2 = new Chart(this.context, {
+      type: 'bar',
+      data: {
+        labels: this.state.states,
+        datasets: [  
+          { data:this.state.poblation, label: 'Poblacion', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+          { data: this.state.infected, label: 'Infectados', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  generateRandomColors(count: number): string[] {
+    const colors: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const color = this.randomColor();
+      colors.push(color);
+    }
+    return colors;
+  }
+
+  randomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
 
   async enviarDatosAlServidor(data: any) {
     try {
@@ -168,6 +261,15 @@ export class DashboardComponent {
     } catch (error) {
       console.error('Error al enviar datos al servidor:', error);
     }
+  }
+
+  onOptionSelected(event: any) {
+    this.selectedOption = event.target.value;
+    const index = this.state.states.findIndex((element) => element === this.selectedOption);
+    this.createChart(index);
+    console.log(index);
+    console.log('Índice seleccionado:', this.selectedOption);
+    this.createChartBar(index);
   }
 
 }

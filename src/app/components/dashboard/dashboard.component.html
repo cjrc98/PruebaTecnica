@@ -2,3 +2,13 @@
 
 <input type="file" (change)="onFileSelected($event)">
 <button (click)="processCSV()">Procesar CSV</button>
+
+
+    <select (change)="onOptionSelected($event)" >
+        <option *ngFor="let option of state.states" [value]="option">{{ option }}</option>
+    </select>
+  
+    <canvas #myCanvas width="90%" height="100"></canvas>
+    <canvas #myCanvas2 width="100%" height="100"></canvas>
+
+

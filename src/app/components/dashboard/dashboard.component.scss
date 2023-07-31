@@ -1,0 +1,54 @@
+*{
+    font-family: 'DM sans';
+}
+.container__card{
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.096);
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+.container__card p{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+h2{
+    color: rgb(7, 7, 141);
+    margin: 15px 0px;
+}
+.card__image{
+    height: 200px;
+    background-image: url('../../../assets/diagrama.png');
+    background-size: 200px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+
+}
+.card__image--affected{
+    background-image: url('../../../assets/staks.jpg');
+    background-size: 300px;
+}
+.select__state{
+    border: none;
+    height: 40px;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+.container__canvas{
+    height: 100%;
+    width: 100%;
+}
+#card__state{
+    font-size: 32px;
+    color: rgb(7, 7, 141);
+    margin-top: 10px;
+}
+@media (min-width: 768px) {
+    .container__canvas{
+        height: 600px;
+        width: 600px;
+    }
+}

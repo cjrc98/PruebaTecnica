@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 
 @Component({
@@ -6,7 +6,7 @@ import { Chart, registerables } from 'chart.js';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent{
+export class DashboardComponent implements OnInit {
   @ViewChild('myCanvas') myCanvas!: ElementRef;
   @ViewChild('myCanvas2') myCanvas2!: ElementRef;
   private context!: CanvasRenderingContext2D | null;
@@ -24,9 +24,27 @@ export class DashboardComponent{
   selectedOption: string;
   myChart;
   myChart2;
-
+  valueStatesAffected = 0;
+  statesAffected = 0;
+  indexMaxInfected;
+  indexMinInfected;
+  saveinfo = false;
   constructor(){
     Chart.register(...registerables);
+  }
+
+  ngOnInit(): void {
+
+    if (this.getInfoLocalstorage()) {
+      this.state = this.getInfoLocalstorage();
+      this.calcStatesAffected(this.state);
+    }else{
+      this.saveinfo=true;
+    }
+    const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
+    canvas.width = 400;
+    canvas.height = 200;
+    // this.onOptionSelected(0);
   }
 
 
@@ -43,7 +61,7 @@ export class DashboardComponent{
         this.csvData = this.CSVToArray(csvData);
         this.csvData[0].splice(11, 0, "Province", "Country");
         this.calcData(this.matrizToJson(this.csvData));
-        console.log(this.csvData);     
+        // console.log(this.csvData);     
         return this.csvData;
       };
 
@@ -86,12 +104,10 @@ export class DashboardComponent{
 
     this.insertDataStateObject(this.state, jsonData);
     this.calcStatesAffected(this.state);
-
+    this.setInfoLocalstorage(this.state,jsonData);
   }
 
   calcStatesAffected(state) {
-
-    let valueStatesAffected = 0, statesAffected = '';
     let maxinfected = -Infinity;
     let mininfected = Infinity;
     for (let index = 0; index < state.states.length; index++) {
@@ -100,22 +116,28 @@ export class DashboardComponent{
 
       state.percentage[index] = (infected * 100) / poblation;
 
-      if (state.percentage[index] > valueStatesAffected) {
-        valueStatesAffected = state.percentage[index];
-        statesAffected = state.states[index];
+      if (state.percentage[index] > this.valueStatesAffected) {
+        this.valueStatesAffected = state.percentage[index];
+        this.statesAffected = index;
       }
 
-      if (!Number.isNaN(infected)) {
-        maxinfected = Math.max(maxinfected, infected);
-        mininfected = Math.min(mininfected, infected);
+      if (!Number.isNaN(infected) && infected!=null) {
+        if (maxinfected < state.infected[index]) {
+          maxinfected = state.infected[index];
+          this.indexMaxInfected = index;
+        }
+        if (mininfected > state.infected[index]) {
+          mininfected = state.infected[index];
+          this.indexMinInfected = index;
+        }
+
       }
     }
 
-    console.log('states mas Affected con un porcentaje de infeccion de: ', valueStatesAffected, ' es el states de:', statesAffected);
+    console.log('states mas Affected con un porcentaje de infeccion de: ', this.valueStatesAffected, ' es el estado de:', this.statesAffected);
     console.log('Valor más alto de infected:', maxinfected);
     console.log('Valor más bajo de infected:', mininfected);
     // console.log(state);
-
 
   }
 
@@ -183,7 +205,7 @@ export class DashboardComponent{
     this.myChart = new Chart(this.context, {
       type: 'pie',
       data: {
-        labels: ['Poblacion', 'Infectados'],
+        labels: ['Poblacion', 'Muertes'],
         datasets: [  
           { data: [ this.state.poblation[index], this.state.infected[index] ], label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
         ]
@@ -205,7 +227,7 @@ export class DashboardComponent{
    
     this.context = this.myCanvas2.nativeElement.getContext('2d');
     const colors = this.generateRandomColors(this.state.poblation.length);
-    // this.destroyChart();
+
     if (this.myChart2) {
       this.myChart2.destroy();
     }
@@ -214,8 +236,8 @@ export class DashboardComponent{
       data: {
         labels: this.state.states,
         datasets: [  
-          { data:this.state.poblation, label: 'Poblacion', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
-          { data: this.state.infected, label: 'Infectados', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+          { data:this.state.poblation, label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+          { data: this.state.infected, label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
         ]
       },
       options: {
@@ -265,6 +287,8 @@ export class DashboardComponent{
 
   onOptionSelected(event: any) {
     this.selectedOption = event.target.value;
+    console.log(event);
+    
     const index = this.state.states.findIndex((element) => element === this.selectedOption);
     this.createChart(index);
     console.log(index);
@@ -272,4 +296,14 @@ export class DashboardComponent{
     this.createChartBar(index);
   }
 
+  setInfoLocalstorage(state,jsonData){
+    this.saveinfo = true;
+    const stateJSON = JSON.stringify(state);
+    localStorage.setItem('staks', stateJSON);
+  
+  }
+  getInfoLocalstorage(){
+    const state = localStorage.getItem('staks');
+    return JSON.parse(state) ; 
+  }
 }

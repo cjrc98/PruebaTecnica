@@ -5,50 +5,79 @@
         rel="stylesheet">
 </head>
 
-<input *ngIf="saveinfo" type="file" (change)="onFileSelected($event)">
-<button *ngIf="saveinfo" (click)="processCSV()">Procesar CSV</button>
-
-
-<select class="select__state" (change)="onOptionSelected($event)">
-    <option value="seleccionar"></option>
-    <option *ngFor="let option of state.states" [value]="option">{{ option }}</option>
-</select>
-
-<div class="container__canvas">
-    <canvas #myCanvas id="myCanvas" height="0"></canvas>
+<div *ngIf="saveinfo">
+    <div class="container__text">
+        <h1 class="title__text">Cargar Archivo</h1>
+        <p class="parraf__text">En el siguiente espacio podra cargar un archivo de tipo csv, para calcular las estadisticas del covid, categorizada por estado, poblacion y muertes.</p>
+    </div>
+<div class="father__file">
+    <p class="texto__file">Seleccion un archivo o Arrastre aquí</p>
+    <div>
+        <input class="input__file" type="file" (change)="onFileSelected($event)">
+    </div>
+</div>
+<button class="input__file--button"  (click)="processCSV()">Procesar CSV</button>
 </div>
 
-<canvas #myCanvas2 width="50%" height="50%"></canvas>
+<div *ngIf="!saveinfo">
+    <div class="tittle__card" style="margin: 0 auto;">
+        <label class="label__card">Seleccion el estado del cual desea ver el gráfico</label>
+    </div>
 
-<div class="container__cards">
-    <div class="container__card">
-        <h2>Estado con mas muertes</h2>
-        <hr>
-        <div class="card__image"></div>
-        <p id="card__state" >{{ state.states[indexMaxInfected] }}</p>
-        <hr>
-        <p>Muertes: {{ (state.infected[indexMaxInfected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 }) }}</p>
-        <p>Poblacion: {{ (state.poblation[indexMaxInfected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 }) }}</p>
-        <p>Porcentaje: {{ state.percentage[indexMaxInfected].toFixed(3) }}%</p>
+    <select class="select__state" (change)="onOptionSelected($event)">
+        <option>Seleccionar</option>
+        <option *ngFor="let option of state.states" [value]="option">{{ option }}</option>
+    </select>
+
+    <div *ngIf="activeCanvas">
+        <div class="fatherCanvas">
+            <div class="container__canvas">
+                <canvas #myCanvas id="myCanvas" height="0"></canvas>
+            </div>
+        </div>
+        <div>
+            <canvas #myCanvas2></canvas>
+        </div>
     </div>
-    <div class="container__card">
-        <h2>Estado con menos muertes</h2>
-        <hr>
-        <div class="card__image"></div>
-        <p>{{ state.states[indexMinInfected] }}</p>
-        <hr>
-        <p>Muertes: {{ state.infected[indexMinInfected] }}</p>
-        <p>Poblacion: {{ (state.poblation[indexMinInfected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 }) }}</p>
-        <p>Porcentaje: {{ state.percentage[indexMinInfected].toFixed(3) }}%</p>
-    </div>
-    <div class="container__card">
-        <h2>Estado mas afectado</h2>
-        <hr>
-        <div class="card__image--affected card__image"></div>
-        <p>{{ state.states[statesAffected] }}</p>
-        <hr>
-        <p>Muertes: {{ (state.infected[statesAffected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 }) }}</p>
-        <p>Poblacion: {{ (state.poblation[statesAffected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 }) }}</p>
-        <p>Porcentaje: {{ state.percentage[statesAffected].toFixed(3) }}%</p>
+    <div class="container__cards">
+
+        <div class="tittle__card">
+            <label class="label__card">Estado de más muertes</label>
+        </div>
+        <app-card title="Estado" color=1 [data]="state.states[indexMaxInfected]"></app-card>
+        <app-card title="Muertes" color=2
+            [data]="(state.infected[indexMaxInfected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 })"></app-card>
+        <app-card title="Poblacion" color=3
+            [data]="(state.poblation[indexMaxInfected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 })"></app-card>
+        <app-card title="Porcentaje" color=4 [data]="(state.percentage[indexMaxInfected]).toFixed(3)"></app-card>
+
+
+        <div class="tittle__card">
+            <label class="label__card">Estado de menos muertes</label>
+        </div>
+        <app-card title="Estado" color=1 [data]="state.states[indexMinInfected]"></app-card>
+        <app-card title="Muertes" color=2 [data]="state.infected[indexMinInfected]"></app-card>
+        <app-card title="Poblacion" color=3
+            [data]="(state.poblation[indexMinInfected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 })"></app-card>
+        <app-card title="Porcentaje" color=4 [data]="(state.percentage[indexMinInfected]).toFixed(3)"></app-card>
+
+
+        <div class="tittle__card">
+            <label class="label__card">Estado más afectado</label>
+        </div>
+        <app-card title="Estado" color=1 [data]="state.states[statesAffected]"></app-card>
+        <app-card title="Muertes" color=2
+            [data]="(state.infected[statesAffected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 })"></app-card>
+        <app-card title="Poblacion" color=3
+            [data]="(state.poblation[statesAffected] / 1000).toLocaleString('en-US', { minimumFractionDigits: 3 })"></app-card>
+        <app-card title="Porcentaje" color=4 [data]="(state.percentage[statesAffected]).toFixed(3)"></app-card>
+
+        <div class="tittle__card">
+            <label class="label__card">Criterio de evaluación</label>
+        </div>
+        <div class="tooltip">
+            <img src="../../../assets/mentor.png">
+            <p>El estado que fue mas afectado es aquel que la cantidad de habitantes vs la cantidad de muertos.</p>
+        </div>
     </div>
 </div>

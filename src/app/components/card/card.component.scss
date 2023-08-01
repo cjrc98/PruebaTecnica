@@ -1,0 +1,52 @@
+
+
+.container__card {
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 170px;
+    max-width: 270px;
+    padding: 15PX;
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+}
+
+.container__card p {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    text-align: right;
+}
+
+#card__state {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.red{    
+        color: red;
+        &.container__card {
+        background-color: rgba(255, 0, 0, 0.089);
+        }
+}
+.green{
+    color: green;
+    &.container__card {
+    background-color: rgba(0, 128, 0, 0.089);
+    }
+}
+.blue{
+    color: blue;
+    &.container__card {
+    background-color: rgba(0, 0, 255, 0.089);
+    }
+}
+.purple{
+    color: purple;
+    &.container__card {
+    background-color: rgba(128, 0, 128, 0.089);
+    }
+}

@@ -24,11 +24,13 @@ export class DashboardComponent implements OnInit {
   selectedOption: string;
   myChart;
   myChart2;
-  valueStatesAffected = 0;
-  statesAffected = 0;
-  indexMaxInfected;
-  indexMinInfected;
-  saveinfo = false;
+  valueStatesAffected: number = 0;
+  statesAffected: number = 0;
+  indexMaxInfected: number;
+  indexMinInfected: number;
+  saveinfo:boolean = false;
+  activeCanvas: boolean = false;
+
   constructor(){
     Chart.register(...registerables);
   }
@@ -41,10 +43,12 @@ export class DashboardComponent implements OnInit {
     }else{
       this.saveinfo=true;
     }
-    const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
-    canvas.width = 400;
-    canvas.height = 200;
-    // this.onOptionSelected(0);
+    if (this.activeCanvas) {
+      const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
+      canvas.width = 400;
+      canvas.height = 200;
+    }
+  
   }
 
 
@@ -61,7 +65,7 @@ export class DashboardComponent implements OnInit {
         this.csvData = this.CSVToArray(csvData);
         this.csvData[0].splice(11, 0, "Province", "Country");
         this.calcData(this.matrizToJson(this.csvData));
-        // console.log(this.csvData);     
+        this.saveinfo=false;
         return this.csvData;
       };
 
@@ -195,8 +199,9 @@ export class DashboardComponent implements OnInit {
   }
 
   createChart(index) {
-   
-    this.context = this.myCanvas.nativeElement.getContext('2d');
+    this.activeCanvas=true;
+    setTimeout(() => {
+      this.context = this.myCanvas.nativeElement.getContext('2d');
     const colors = this.generateRandomColors(this.state.poblation.length);
     // this.destroyChart();
     if (this.myChart) {
@@ -220,6 +225,8 @@ export class DashboardComponent implements OnInit {
     });
 
  
+    }, 200);
+    
 
   }
 
@@ -306,4 +313,6 @@ export class DashboardComponent implements OnInit {
     const state = localStorage.getItem('staks');
     return JSON.parse(state) ; 
   }
+
+  
 }

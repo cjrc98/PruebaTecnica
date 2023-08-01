@@ -243,8 +243,8 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: this.state.states,
         datasets: [  
-          { data:this.state.poblation, label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
-          { data: this.state.infected, label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+          // { data:this.state.poblation, label: '', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
+          { data: this.state.infected, label: 'Muertes por estado', backgroundColor: colors, borderColor: 'rgba(0, 93, 82, 1)', borderWidth: 0.5 },
         ]
       },
       options: {

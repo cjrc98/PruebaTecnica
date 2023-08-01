@@ -13,4 +13,6 @@ Abrir el navegador web e ingresar a la dirección http://localhost:4200/.
 para iniciar el servidor de JSON "Json-server --watch db.json"
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.4.
 
+## Inicio de sesion
+Para iniciar sesion, se usara el usuario:camilored30@gmail.com, y la contraseña:123123
 
